@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="app.css">
+    <link href="./dist/output.css" rel="stylesheet" />
 </head>
+
 <body>
+    <div class="bg-white">
+        <div class="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+            <p class="text-center text-lg font-semibold text-gray-600 capitalize">
+                Pokemon pokedex
+            </p>
+            <div id="pokedex" class="mt-6 grid grid-cols-2 gap-1 md:grid-cols-3 lg:mt-8"></div>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
+
 </html>
