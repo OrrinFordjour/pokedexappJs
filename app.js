@@ -1,4 +1,4 @@
-const pokedex = document.getElementById('pokedex')
+const pokedex = document.getElementById("pokedex");
 
 const fetchPokemon = () => {
   const promises = [];
@@ -19,16 +19,47 @@ const fetchPokemon = () => {
 };
 
 const displayPokemon = (pokemon) => {
-  console.log(pokemon);
-  const pokemonHTMLString = pokemon.map (pokeman => `
-  <div class="bg-gray-100 py-8 px-8 items-center text-center">
+  const pokemonHTMLString = pokemon
+    .map(
+      (pokeman) => `
+  <div class="bg-gray-100 py-8 px-8 items-center text-center" onclick="selectPokemon(${pokeman.id})">
     <img class="mx-auto hover:animate-bounce" src="${pokeman.image}"/>
     <p class="uppercase text-[16px] font-normal">0${pokeman.id}. ${pokeman.name}</p>
     <p class="font-extralight text-[#656] text-[13px]" >Type: ${pokeman.type}</p>
   </div>
-  `).join('');
+  `
+    )
+    .join("");
   pokedex.innerHTML = pokemonHTMLString;
+};
 
+const selectPokemon = async (id) => {
+  const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+  const res = await fetch(url);
+  const pokeman = await res.json();
+  displayPopUp(pokeman);
+};
+
+const displayPopUp = (pokeman) => {
+  const type = pokeman.types.map((type) => type.type.name).join(", ");
+  const image = pokeman.sprites["front_default"];
+  const HtmlString = `
+  <div class="popup fixed top-0 left-0 h-screen w-screen flex justify-center bg-slate-50 items-center text-center">
+    <button class="absolute top-5 right-5 inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onclick="closePopup()">Close</button>
+    <div class="py-8 px-8" onclick="selectPokemon(${pokeman.id})">
+      <img class="mx-auto" src="${image}"/>
+      <p class="uppercase text-[16px] font-normal">0${pokeman.id}. ${pokeman.name}</p>
+      <p class="font-extralight text-[#656] text-[13px] capitalize" >Type: ${type}</p>
+    </div>
+  </div>
+
+  `;
+  pokedex.innerHTML = HtmlString + pokedex.innerHTML;
+};
+
+const closePopup = () => {
+  const popup = document.querySelector(".popup");
+  popup.parentElement.removeChild(popup);
 };
 
 fetchPokemon();
