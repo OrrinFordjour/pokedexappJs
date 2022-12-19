@@ -1,4 +1,5 @@
 const pokedex = document.getElementById("pokedex");
+const pokeCache = {};
 
 const fetchPokemon = () => {
   const promises = [];
@@ -25,7 +26,7 @@ const displayPokemon = (pokemon) => {
   <div class="bg-gray-100 py-8 px-8 items-center text-center" onclick="selectPokemon(${pokeman.id})">
     <img class="mx-auto hover:animate-bounce" src="${pokeman.image}"/>
     <p class="uppercase text-[16px] font-normal">0${pokeman.id}. ${pokeman.name}</p>
-    <p class="font-extralight text-[#656] text-[13px]" >Type: ${pokeman.type}</p>
+    <p class="font-extralight text-[#656] text-[13px] capitalize" >Type: ${pokeman.type}</p>
   </div>
   `
     )
@@ -34,14 +35,21 @@ const displayPokemon = (pokemon) => {
 };
 
 const selectPokemon = async (id) => {
-  const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-  const res = await fetch(url);
-  const pokeman = await res.json();
-  displayPopUp(pokeman);
+  if (!pokeCache[id]) {
+
+    const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+    const res = await fetch(url);
+    const pokeman = await res.json();
+    pokeCache[id] = pokeman
+    console.log(pokeman)
+    displayPopUp(pokeman);
+  }
+  displayPopUp(pokeCache[id]);
 };
 
 const displayPopUp = (pokeman) => {
   const type = pokeman.types.map((type) => type.type.name).join(", ");
+  const abilitie = pokeman.abilities.map((abilitie) => abilitie.ability.name).join(", ");
   const image = pokeman.sprites["front_default"];
   const HtmlString = `
   <div class="popup fixed top-0 left-0 h-screen w-screen flex justify-center bg-slate-50 items-center text-center">
@@ -49,11 +57,27 @@ const displayPopUp = (pokeman) => {
     <div class="py-8 px-8" onclick="selectPokemon(${pokeman.id})">
       <img class="mx-auto" src="${image}"/>
       <p class="uppercase text-[16px] font-normal">0${pokeman.id}. ${pokeman.name}</p>
-      <p class="font-extralight text-[#656] text-[13px] capitalize" >Type: ${type}</p>
+      <div class="flex justify-start gap-4 ">
+        <div class="font-extralight text-[#656] text-[13px] capitalize text-left" >
+          <p>Type:</p>
+          <p>base experience</p>
+          <p>Height:</p>
+          <p>Weight:</p>
+          <p>Abilities:</p>
+        </div>
+        <div  class="font-extralight text-[#656] text-[13px] capitalize text-right" >
+          <p>${type}</p>
+          <p>${pokeman.base_experience}</p>
+          <p>${pokeman.height / 10} m</p>
+          <p>${pokeman.weight / 10} kg</p>
+          <p>${abilitie}</p>
+        </div>
+      </div>
     </div>
   </div>
 
   `;
+  console.log(pokeman);
   pokedex.innerHTML = HtmlString + pokedex.innerHTML;
 };
 
