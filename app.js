@@ -3,7 +3,7 @@ const pokeCache = {};
 
 const fetchPokemon = () => {
   const promises = [];
-  for (let i = 1; i < 152; i++) {
+  for (let i = 1; i < 387; i++) {
     const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
     promises.push(fetch(url).then((response) => response.json()));
   }
